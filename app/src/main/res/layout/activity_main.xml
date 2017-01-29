@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.lb.full_size_popup_spinner.MainActivity">
+
+    <com.lb.full_size_popup_spinner.lib.FullSizePopupSpinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/spinner_background_selector"
+        android:drawablePadding="12dp"
+        android:gravity="left|center_vertical"
+        android:minHeight="?android:attr/listPreferredItemHeightSmall"
+        android:paddingEnd="?attr/listPreferredItemPaddingRight"
+        android:paddingLeft="?attr/listPreferredItemPaddingLeft"
+        android:paddingRight="?attr/listPreferredItemPaddingRight"
+        android:paddingStart="?attr/listPreferredItemPaddingLeft"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:textColor="#FF888888"
+        tools:drawableEnd="@drawable/drop_down_menu_ic_arrow_down"
+        tools:drawableRight="@drawable/drop_down_menu_ic_arrow_down"
+        tools:ignore="UnusedAttribute"
+        tools:targetApi="jelly_bean_mr1"
+        tools:text="filter choosing"/>
+
+</LinearLayout>
