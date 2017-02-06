@@ -1,6 +1,7 @@
 package com.lb.full_size_popup_spinner.lib;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build.VERSION;
@@ -9,8 +10,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.widget.PopupWindowCompat;
 import android.support.v4.widget.TextViewCompat;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -137,7 +140,7 @@ public class FullSizePopupSpinner extends android.support.v7.widget.AppCompatTex
                 linearLayout.setPivotY(0);
                 linearLayout.setScaleY(0);
                 linearLayout.animate().scaleY(1).setDuration(ANIMATION_DURATION).start();
-                mPopupWindow = new SpinnerPopupWindow(popupView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, true, overlayView, linearLayout);
+                mPopupWindow = new SpinnerPopupWindow(popupView, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, true, overlayView, linearLayout);
                 mPopupWindow.setOutsideTouchable(true);
                 mPopupWindow.setTouchable(true);
                 mPopupWindow.setBackgroundDrawable(new ColorDrawable(0));
@@ -189,12 +192,25 @@ public class FullSizePopupSpinner extends android.support.v7.widget.AppCompatTex
                 });
                 // optional: set animation style. look here for more info: http://stackoverflow.com/q/9648797/878126
                 mPopupWindow.setAnimationStyle(0);
-                //PopupWindowCompat.showAsDropDown(mPopupWindow, v, 0, 0, Gravity.TOP);
-                //mPopupWindow.showAsDropDown(v, 0, 0, Gravity.TOP);
-                mPopupWindow.showAsDropDown(v, 0, 0);
+                PopupWindowCompat.showAsDropDown(mPopupWindow, v, 0, 0, Gravity.TOP);
             }
         });
 
+    }
+
+    /**
+     * returns the height of the status bar
+     */
+    public static int getStatusBarHeight(@NonNull final Context context) {
+        final Resources resources = context.getResources();
+        // TODO in future APIs, check if it's possible to get the status bar height without any reflection
+        final int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0)
+            return resources.getDimensionPixelSize(resourceId);
+        else
+            return (int) Math.ceil(25 * resources.getDisplayMetrics().density);
+        // another alternative: getResources().getDisplayMetrics().heightPixels -
+        // getActivity().findViewById(android.R.id.content).getMeasuredHeight()
     }
 
     static class SpinnerPopupWindow extends PopupWindow {

@@ -1,43 +1,36 @@
-<ScrollView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:layout_height="wrap_content"
+    android:clipToPadding="false">
 
-    <FrameLayout
+    <View
+        android:id="@+id/spinner_drop_down_popup__overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#33000000"/>
+
+    <LinearLayout
+        android:id="@+id/spinner_drop_down_popup__itemsContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clipToPadding="false">
+        android:elevation="8dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:ignore="UnusedAttribute">
 
         <View
-            android:id="@+id/spinner_drop_down_popup__overlay"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#33000000"/>
+            android:layout_height="1dp"
+            android:background="@drawable/list_view_horizontal_divider"/>
 
-        <LinearLayout
-            android:id="@+id/spinner_drop_down_popup__itemsContainer"
+        <FrameLayout
+            android:id="@+id/spinner_drop_down_popup__preLollipopShadow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="8dp"
-            android:gravity="center"
-            android:orientation="vertical"
-            tools:ignore="UnusedAttribute">
+            android:foreground="?android:windowContentOverlay"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@drawable/list_view_horizontal_divider"/>
+    </LinearLayout>
 
-            <FrameLayout
-                android:id="@+id/spinner_drop_down_popup__preLollipopShadow"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:foreground="?android:windowContentOverlay"/>
-
-        </LinearLayout>
-
-    </FrameLayout>
-
-</ScrollView>
+</FrameLayout>
