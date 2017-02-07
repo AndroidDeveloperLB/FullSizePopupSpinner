@@ -1,7 +1,6 @@
 package com.lb.full_size_popup_spinner.lib;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build.VERSION;
@@ -12,13 +11,17 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.widget.PopupWindowCompat;
 import android.support.v4.widget.TextViewCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.Adapter;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewPropertyAnimator;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
@@ -124,7 +127,6 @@ public class FullSizePopupSpinner extends android.support.v7.widget.AppCompatTex
         mClosedDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.drop_down_menu_ic_arrow_down, null);
         mOpenedDrawable = ViewUtil.getRotateDrawable(mClosedDrawable, 180);
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(FullSizePopupSpinner.this, null, null, mClosedDrawable, null);
-
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -133,47 +135,58 @@ public class FullSizePopupSpinner extends android.support.v7.widget.AppCompatTex
                 if (mPopupWindow != null)
                     mPopupWindow.dismissRightAway();
                 TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(FullSizePopupSpinner.this, null, null, mOpenedDrawable, null);
-                LayoutInflater layoutInflater = LayoutInflater.from(context);
+                final LayoutInflater layoutInflater = LayoutInflater.from(context);
                 final View popupView = layoutInflater.inflate(R.layout.spinner_drop_down_popup, null, false);
-                final LinearLayout linearLayout = (LinearLayout) popupView.findViewById(R.id.spinner_drop_down_popup__itemsContainer);
+                final RecyclerView recyclerView = (RecyclerView) popupView.findViewById(R.id.spinner_drop_down_popup__recyclerView);
                 final View overlayView = popupView.findViewById(R.id.spinner_drop_down_popup__overlay);
-                linearLayout.setPivotY(0);
-                linearLayout.setScaleY(0);
-                linearLayout.animate().scaleY(1).setDuration(ANIMATION_DURATION).start();
-                mPopupWindow = new SpinnerPopupWindow(popupView, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, true, overlayView, linearLayout);
+                recyclerView.setPivotY(0);
+                recyclerView.setScaleY(0);
+                recyclerView.animate().scaleY(1).setDuration(ANIMATION_DURATION).start();
+                mPopupWindow = new SpinnerPopupWindow(popupView, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, true, overlayView,
+                        popupView.findViewById(R.id.spinner_drop_down_popup__itemsContainer));
                 mPopupWindow.setOutsideTouchable(true);
                 mPopupWindow.setTouchable(true);
                 mPopupWindow.setBackgroundDrawable(new ColorDrawable(0));
-                //PopupWindowCompat.setOverlapAnchor(mPopupWindow, false);
-                //if (VERSION.SDK_INT >= VERSION_CODES.M)
-                //    mPopupWindow.setOverlapAnchor(false);
                 final AtomicBoolean isItemSelected = new AtomicBoolean(false);
                 if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
                     popupView.findViewById(R.id.spinner_drop_down_popup__preLollipopShadow).setVisibility(View.GONE);
-                    linearLayout.setBackgroundColor(0xFFffffff);
+                    recyclerView.setBackgroundColor(0xFFffffff);
                 }
-                for (int i = 0; i < mItemsTextsResIds.length; ++i) {
-                    final String itemText = getResources().getString(mItemsTextsResIds[i]);
-                    final int position = i;
-                    View itemView = layoutInflater.inflate(R.layout.spinner_drop_down_popup_item, linearLayout, false);
-                    final TextView textView = (TextView) itemView.findViewById(android.R.id.text1);
-                    textView.setText(itemText);
-                    if (mItemsIconsResIds != null)
-                        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView, mItemsIconsResIds[position], 0,
-                                position == mSelectedItemPosition ? R.drawable.drop_down_menu_ic_v : 0, 0);
-                    else
-                        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView, 0, 0, position == mSelectedItemPosition ? R.drawable.drop_down_menu_ic_v : 0, 0);
+                recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+                recyclerView.setAdapter(new Adapter() {
+                    @Override
+                    public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+                        final View itemView = layoutInflater.inflate(R.layout.spinner_drop_down_popup_item, recyclerView, false);
+                        final ViewHolder holder = new ViewHolder(itemView) {
+                        };
+                        itemView.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(final View v) {
+                                isItemSelected.set(true);
+                                mPopupWindow.dismiss();
+                                setSelectedItemPosition(holder.getAdapterPosition());
+                            }
+                        });
+                        return holder;
+                    }
 
-                    linearLayout.addView(itemView, linearLayout.getChildCount() - 2);
-                    itemView.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(final View v) {
-                            isItemSelected.set(true);
-                            mPopupWindow.dismiss();
-                            setSelectedItemPosition(position);
-                        }
-                    });
-                }
+                    @Override
+                    public void onBindViewHolder(final ViewHolder holder, final int position) {
+                        final String itemText = getResources().getString(mItemsTextsResIds[position]);
+                        final TextView textView = (TextView) holder.itemView.findViewById(android.R.id.text1);
+                        textView.setText(itemText);
+                        if (mItemsIconsResIds != null)
+                            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView, mItemsIconsResIds[position], 0,
+                                    position == mSelectedItemPosition ? R.drawable.drop_down_menu_ic_v : 0, 0);
+                        else
+                            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView, 0, 0, position == mSelectedItemPosition ? R.drawable.drop_down_menu_ic_v : 0, 0);
+                    }
+
+                    @Override
+                    public int getItemCount() {
+                        return mItemsTextsResIds.length;
+                    }
+                });
                 overlayView.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(final View v) {
@@ -196,21 +209,6 @@ public class FullSizePopupSpinner extends android.support.v7.widget.AppCompatTex
             }
         });
 
-    }
-
-    /**
-     * returns the height of the status bar
-     */
-    public static int getStatusBarHeight(@NonNull final Context context) {
-        final Resources resources = context.getResources();
-        // TODO in future APIs, check if it's possible to get the status bar height without any reflection
-        final int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0)
-            return resources.getDimensionPixelSize(resourceId);
-        else
-            return (int) Math.ceil(25 * resources.getDisplayMetrics().density);
-        // another alternative: getResources().getDisplayMetrics().heightPixels -
-        // getActivity().findViewById(android.R.id.content).getMeasuredHeight()
     }
 
     static class SpinnerPopupWindow extends PopupWindow {

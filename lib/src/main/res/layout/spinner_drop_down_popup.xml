@@ -1,6 +1,5 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clipToPadding="false">
@@ -15,10 +14,14 @@
         android:id="@+id/spinner_drop_down_popup__itemsContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="8dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        tools:ignore="UnusedAttribute">
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/spinner_drop_down_popup__recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="8dp"
+            android:gravity="center"/>
 
         <View
             android:layout_width="match_parent"
@@ -30,7 +33,5 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:foreground="?android:windowContentOverlay"/>
-
     </LinearLayout>
-
 </FrameLayout>
