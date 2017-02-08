@@ -139,11 +139,12 @@ public class FullSizePopupSpinner extends android.support.v7.widget.AppCompatTex
                 final View popupView = layoutInflater.inflate(R.layout.spinner_drop_down_popup, null, false);
                 final RecyclerView recyclerView = (RecyclerView) popupView.findViewById(R.id.spinner_drop_down_popup__recyclerView);
                 final View overlayView = popupView.findViewById(R.id.spinner_drop_down_popup__overlay);
-                recyclerView.setPivotY(0);
-                recyclerView.setScaleY(0);
-                recyclerView.animate().scaleY(1).setDuration(ANIMATION_DURATION).start();
+                final View itemsContainer = popupView.findViewById(R.id.spinner_drop_down_popup__itemsContainer);
+                itemsContainer.setPivotY(0);
+                itemsContainer.setScaleY(0);
+                itemsContainer.animate().scaleY(1).setDuration(ANIMATION_DURATION).start();
                 mPopupWindow = new SpinnerPopupWindow(popupView, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, true, overlayView,
-                        popupView.findViewById(R.id.spinner_drop_down_popup__itemsContainer));
+                        itemsContainer);
                 mPopupWindow.setOutsideTouchable(true);
                 mPopupWindow.setTouchable(true);
                 mPopupWindow.setBackgroundDrawable(new ColorDrawable(0));
