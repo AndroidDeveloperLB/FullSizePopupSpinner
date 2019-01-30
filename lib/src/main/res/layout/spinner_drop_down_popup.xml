@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/spinner_drop_down_popup__recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

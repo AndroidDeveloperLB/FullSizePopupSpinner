@@ -7,14 +7,14 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.widget.PopupWindowCompat;
-import android.support.v4.widget.TextViewCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.Adapter;
-import android.support.v7.widget.RecyclerView.ViewHolder;
+import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.widget.PopupWindowCompat;
+import androidx.core.widget.TextViewCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.Adapter;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -28,7 +28,7 @@ import android.widget.TextView;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class FullSizePopupSpinner extends android.support.v7.widget.AppCompatTextView {
+public class FullSizePopupSpinner extends androidx.appcompat.widget.AppCompatTextView {
     private static final long ANIMATION_DURATION = 150;
     private int[] mItemsTextsResIds, mItemsIconsResIds;
     private int mSelectedItemPosition = -1;
